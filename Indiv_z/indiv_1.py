@@ -7,7 +7,7 @@ from datetime import date
 def get_contact():
     name = input("Фамилия и инициалы?  ")
     number = input("Номер телефона? ")
-    birth_date = list(map(int, input("Дата рождения (в формате XX.XX.XXXX)? ").split('.')))
+   birth_date = datetime.strptime(input("Дата рождения (в формате DD.MM.YYYY)? "), "%d.%m.%Y")
 
     if number[0] == '+':
         number = '8' + number[2:]
@@ -16,6 +16,7 @@ def get_contact():
         'number': number,
         'date': birth_date,
     }
+
 
 def display_contacts(contacts):
     if contacts:
@@ -34,8 +35,7 @@ def display_contacts(contacts):
         print(line)
 
         for idx, contact in enumerate(contacts,1):
-            date_list = contact.get('date', [0, 0, 0])
-            date_str = f"{date_list[0]}.{date_list[1]}.{date_list[2]}"
+            date_str = (contact.get('date', '')).strftime("%d.%m.%Y")
 
             print(
                 '| {:>4} | {:<30} | {:<25} | {:<20} |'.format(
@@ -71,11 +71,8 @@ def main():
             contact = get_contact()
             contacts.append(contact)
 
-            if len(contacts) > 1:
-                contacts.sort(key=lambda item: (item.get('date', [0, 0, 0])[2],
-                                                item.get('date', [0, 0, 0])[1],
-                                                item.get('date', [0, 0, 0])[0]))
-
+             if len(contacts) > 1:
+                contacts.sort(key=lambda item: item.get('date',''))
         elif command == "list":
 
             display_contacts(contacts)
